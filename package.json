@@ -1,0 +1,7 @@
+{
+    "name": "crawler",
+    "version": "1.0.0",
+    "description": "My crawling app",
+    "author": "Nicolas Bernaux <bernaux.n@gmail.com>",
+    "private": true
+}
