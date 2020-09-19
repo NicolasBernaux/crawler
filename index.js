@@ -4,15 +4,14 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
+const apiRoutes = require('./api')
 async function start() {
   // Give usefull middleware to express
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(morgan('combined'))
 
-  app.use('/', async (req, res) => {
-    res.send('Yes')
-  })
+  app.use('/api/', apiRoutes)
 
   // Listen the server
   app.set('port', process.env.PORT || 3000)
