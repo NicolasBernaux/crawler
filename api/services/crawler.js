@@ -85,8 +85,11 @@ module.exports = async (baseUrl) => {
 
   const crawler = await HCCrawler.launch(params)
   // Queue a request
-  await crawler.queue(baseUrl, {
-    saveAs: path.normalize(`${testPath}/${domain}-${timestamp}.png`),
+  await crawler.queue({
+    url: baseUrl,
+    screenshot: {
+      path: path.normalize(`${testPath}/${domain}-${timestamp}.png`),
+    },
   })
 
   await crawler.onIdle() // Resolved when no queue is left
