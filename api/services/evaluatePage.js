@@ -44,7 +44,13 @@ module.exports = async () => {
             .split('\n')
             .join(' ')) ||
         '',
-      keywords: $('meta[name="keywords"]').attr('content'),
+      keywords: {
+        body: document.body.innerText,
+        title: ` ${$('title').text()} `,
+        h1: ` ${$('h1').append(' ').text()} `,
+        h2: ` ${$('h2').append(' ').text()} `,
+        lang: document.documentElement.lang,
+      },
       canonical: canonical,
       is_canonical: canonical
         ? canonical == decodeURI(window.location.href)

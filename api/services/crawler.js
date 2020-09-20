@@ -8,6 +8,7 @@ const url = require('url')
 const evaluatePage = require('./evaluatePage')
 const fields = require('../data/fields')
 const formatCSV = require('../services/formatCSV')
+const keywordParser = require('./keywordParser')
 
 module.exports = async (baseUrl) => {
   const domain = url.parse(baseUrl).hostname
@@ -63,9 +64,6 @@ module.exports = async (baseUrl) => {
       // The result contains options, links, cookies and etc.
       const result = await crawl()
 
-      // screenshot
-      // result.result.screenshot = `data:image/png;base64,${result.screenshot.toString('base64')}`
-
       // Mixed content url
       result.result.mixed_content_url = mixedContentUrl
       // You can access the page object after requests
@@ -74,9 +72,10 @@ module.exports = async (baseUrl) => {
       return result
     },
     // Function to be called with evaluated results from browsers
-    onSuccess: (result) => {
-      if (result.response.status === 200) {
-        consola.success(result.response.status, result.response.url)
+    onSuccess: async (result) => {
+      if (result.response.status === 200 && !result.previousUrl) {
+        result.result.keywords = await keywordParser(result.result.keywords)
+        consola.success(result.response.status, result.result.keywords)
       } else {
         consola.warn(result.response.status, result.response.url)
       }
