@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const CrawlController = require('../controlers/crawl')
+
+router.get('/crawl', CrawlController.crawl)
 
 router.get('/', (req, res) => {
   res.json({

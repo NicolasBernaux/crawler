@@ -6,7 +6,8 @@ const path = require('path')
 const url = require('url')
 
 const evaluatePage = require('./evaluatePage')
-const fields = require('./fields')
+const fields = require('../data/fields')
+const formatCSV = require('../services/formatCSV')
 
 module.exports = async (baseUrl) => {
   const domain = url.parse(baseUrl).hostname
@@ -90,4 +91,8 @@ module.exports = async (baseUrl) => {
 
   await crawler.onIdle() // Resolved when no queue is left
   await crawler.close() // Close the crawler
+
+  // Format head file
+  formatCSV(file)
+  return file
 }
