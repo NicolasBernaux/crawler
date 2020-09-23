@@ -8,6 +8,7 @@ const url = require('url')
 const evaluatePage = require('./evaluatePage')
 const fields = require('../data/fields')
 const formatCSV = require('../services/formatCSV')
+const imageOptim = require('../services/imageOptim')
 const keywordParser = require('./keywordParser')
 
 module.exports = async (baseUrl) => {
@@ -75,7 +76,7 @@ module.exports = async (baseUrl) => {
     onSuccess: async (result) => {
       if (result.response.status === 200 && !result.previousUrl) {
         result.result.keywords = await keywordParser(result.result.keywords)
-        consola.success(result.response.status, result.result.keywords)
+        consola.success(result.response.status, result.response.url)
       } else {
         consola.warn(result.response.status, result.response.url)
       }
@@ -84,15 +85,19 @@ module.exports = async (baseUrl) => {
 
   const crawler = await HCCrawler.launch(params)
   // Queue a request
+  const image = path.normalize(`${testPath}/${domain}-${timestamp}.png`)
   await crawler.queue({
     url: baseUrl,
     screenshot: {
-      path: path.normalize(`${testPath}/${domain}-${timestamp}.png`),
+      path: image,
     },
   })
 
   await crawler.onIdle() // Resolved when no queue is left
   await crawler.close() // Close the crawler
+
+  // Optimize image
+  imageOptim(image)
 
   // Format head file
   formatCSV(file)
