@@ -8,5 +8,7 @@ module.exports = {
   extends: ['prettier', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   // add your custom rules here
-  rules: {},
+  rules: {
+    'sort-imports': ['error', { ignoreCase: true }],
+  },
 }
